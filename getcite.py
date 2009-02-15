@@ -21,7 +21,7 @@ import cookielib
 ############################################################
 user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 6.0; ' + \
         'en-GB; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5'
-sleep_intv = 0 # set this to avoid banning by Google
+sleep_intv = 60 # set this to avoid banning by Google
 paper_author = 'Xiaofei He'
 index_file = 'papers.txt'
 data_dir = 'paper_cites'
