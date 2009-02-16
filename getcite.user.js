@@ -154,13 +154,18 @@ function letsJQuery() {
         return my_bib[0]+'\n'+cites.join('\n');
     }
 
-
+    $('body').append('<hr />Thanks for using the citation gathering tool. ' + 
+                     'Documentation can be found here. ' + 
+                     'Be sure to go to <a href="/scholar_preference">the' +
+                     ' preference page<a> to <b>enable BibTeX importing</b>' +
+                     ' before using.');
     $('body').append('<h1>Paste titles of your publications below</h1>');
     $('body').append('And the paper author here: <input type="text" ' + 
-                     'id="gc_author" size="20" value="' + gc_config.paper_author +
+                     'id="gc_author" size="20" value="' +
+                     gc_config.paper_author +
                      '"></input><br />');
     $('body').append('<textarea id="gc_publs" cols="80" ' +
-                     'rows="30"></textarea><br />');
+                     'rows="20"></textarea><br />');
     $('body').append('<input type="button" id="gc_go" value="Fetch">' +
                      '</input><br />');
     $('#gc_go').click(function () {
