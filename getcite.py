@@ -24,6 +24,7 @@ user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 6.0; ' + \
 sleep_intv = 60 # set this to avoid banning by Google
 paper_author = 'Xiaofei He'
 index_file = 'papers.txt'
+error_file = 'errors.txt'
 data_dir = 'paper_cites'
 
 
@@ -145,7 +146,7 @@ for title in papers:
         errors.append((title, e.args[0]))
 
 if len(errors) != 0:
-    ferr = open('errors.txt', 'w')
+    ferr = open(error_file, 'w')
     for tit, msg in errors:
         ferr.write('%s: %s\n' % (tit, msg))
     ferr.close()
