@@ -137,11 +137,17 @@ function letsJQuery() {
             log('<font color=blue>' + ncites + ' cites</font>');
 
             cites = new Array();
-            starts = 0;
-            while (cites.length < ncites) {
+            var starts = 0; 
+            var has_next_page = true;
+            while (has_next_page) {
                 cite_page = retrieve(grps[1]+'&start='+starts);
                 cites = cites.concat(extract_bibtex(cite_page));
                 starts += gc_config.items_per_page;
+                if (/<img src=\/intl\/en\/nav_next.gif width=100/.exec(cite_page)) {
+                    has_next_page = true;
+                } else {
+                    has_next_page = false;
+                }
             }
         }
 
