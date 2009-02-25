@@ -118,12 +118,6 @@ def format_ncite(nself_cite, nother_cite):
     fmt += ', '.join(arr) + ')'
     return fmt
 
-def format_cites(tex_file, cites):
-    tex_file.write('\\begin{enumerate}\n')
-    for cite_key, cite_bib in cites:
-        tex_file.write('\\item %s\n' % bibitem_tex[cite_key])
-    tex_file.write('\\end{enumerate}\n')
-
 
 ############################################################
 # Main Script
@@ -192,22 +186,21 @@ tex_file.write('For each one of them, I list the works that ' + \
 for i in range(len(publications)):
     publ_key = publications[i][0]
     tex_file.write('\\vspace{.1in}\\rule{\\linewidth}{.05mm}\n')
-    tex_file.write('My paper \\textbf{')
+    tex_file.write('%d. My paper \\textbf{' % (i+1))
     tex_file.write(bibitem_tex[publ_key])
-    tex_file.write('} has %s.\n' % \
+    tex_file.write('} has %s. self cites are marked with *.\n' % \
             format_ncite(len(self_cites[i]), len(other_cites[i])))
 
     if (len(self_cites[i])+len(other_cites[i]) == 0):
         tex_file.write('\n')
     else:
-        tex_file.write('\\begin{itemize}\n')
-        if len(self_cites[i]) != 0:
-            tex_file.write('\\item \\textsc{Self Cites}:\n')
-            format_cites(tex_file, self_cites[i])
-        if len(other_cites[i]) != 0:
-            tex_file.write('\\item \\textsc{Other Cites}:\n')
-            format_cites(tex_file, other_cites[i])
-        tex_file.write('\\end{itemize}\n\n')
+        tex_file.write('\\begin{enumerate}\n')
+        for cite_key, cite_bib in self_cites[i]:
+            tex_file.write('\\item * %s\n' % bibitem_tex[cite_key])
+        for cite_key, cite_bib in other_cites[i]:
+            tex_file.write('\\item %s\n' % bibitem_tex[cite_key])
+        tex_file.write('\\end{enumerate}\n')
+
 tex_file.write(finaltex_footer)
 tex_file.close()
 sh_in_tmp('pdflatex %s.tex' % tex_filename)
