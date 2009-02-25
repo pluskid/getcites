@@ -41,6 +41,7 @@ tmptex_footer = r"""
 """
 finaltex_header = r"""
 \documentclass{article}
+\usepackage[usenames]{color}
 \setlength{\parindent}{0in}
 \title{%s}
 \author{%s}
@@ -186,7 +187,7 @@ tex_file.write('For each one of them, I list the works that ' + \
 for i in range(len(publications)):
     publ_key = publications[i][0]
     tex_file.write('\\vspace{.1in}\\rule{\\linewidth}{.05mm}\n')
-    tex_file.write('%d. My paper \\textbf{' % (i+1))
+    tex_file.write('{\\color{blue}%d,} My paper \\textbf{' % (i+1))
     tex_file.write(bibitem_tex[publ_key])
     tex_file.write('} has %s. self cites are marked with *.\n' % \
             format_ncite(len(self_cites[i]), len(other_cites[i])))
