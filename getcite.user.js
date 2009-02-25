@@ -129,14 +129,14 @@ function letsJQuery() {
             log('<font color=red>Ambiguity</font><br />');
             throw E_ambiguity;
         }
-        grps = matches[0];
+        var grps = matches[0];
+        var cites = new Array();
         if (grps[2] == undefined) {
             log('<font color=blue>No cite</font>');
         } else {
             ncites = parseInt(grps[2]);
             log('<font color=blue>' + ncites + ' cites</font>');
 
-            cites = new Array();
             var starts = 0; 
             var has_next_page = true;
             while (has_next_page) {
