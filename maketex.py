@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 ############################################################
 # Documentation
@@ -30,8 +31,9 @@ append_seed = 1
 bibitem_tex = {}
 publications = []
 citations = []
-tmptex_header = r"""
-\documentclass{article}
+tmptex_header = r"""\documentclass{article}
+\usepackage{xeCJK}
+\setCJKmainfont{Sun-ExtA}
 \begin{document}
 """
 tmptex_footer = r"""
@@ -39,8 +41,9 @@ tmptex_footer = r"""
 \bibliography{foo}
 \end{document}
 """
-finaltex_header = r"""
-\documentclass{article}
+finaltex_header = r"""\documentclass{article}
+\usepackage{xeCJK}
+\setCJKmainfont{Sun-ExtA}
 \usepackage[usenames]{color}
 \setlength{\parindent}{0in}
 \title{%s}
@@ -152,7 +155,7 @@ for i in range(len(publications)):
 tex_file.write(tmptex_footer)
 tex_file.close()
 bib_file.close()
-sh_in_tmp('latex foo')
+sh_in_tmp('xelatex foo')
 sh_in_tmp('bibtex foo')
 
 bbl_file = open(os.path.join(tmp_dir, 'foo.bbl'))
@@ -204,6 +207,6 @@ for i in range(len(publications)):
 
 tex_file.write(finaltex_footer)
 tex_file.close()
-sh_in_tmp('pdflatex %s.tex' % tex_filename)
+sh_in_tmp('xelatex %s.tex' % tex_filename)
 shutil.copy(os.path.join(tmp_dir, tex_filename+'.tex'), '.')
 shutil.copy(os.path.join(tmp_dir, tex_filename+'.pdf'), '.')
