@@ -116,53 +116,66 @@ function clean_page(text) {
 
 function retrieve_cites(title) {
   log('Getting cites for <b>' + title + '</b>...');
-  var page = clean_page(retrieve('/scholar', mksearch(title)));
-  var pat = new RegExp('>' + title +'</a></h3>' + 
-                       '(?:.*?ss=fl><a href="([^"]+)"[^>]*>' + 
-                       'Cited by (\\d+)</a>)?(.*?Import into BibTeX)',
-                       'ig');
-  
-  matches = new Array();
-  while ((res = pat.exec(page)) != null) {
-    matches.push(res);
-  }
-
-  if (matches.length == 0) {
-    log('<font color=red>Not Found</font><br />');
-    throw E_notfound;
-  } else if (matches.length > 1) {
-    log('<font color=red>Ambiguity</font><br />');
-    throw E_ambiguity;
-  }
-  var grps = matches[0];
-  var cites = new Array();
-  if (grps[2] == undefined) {
-    log('<font color=blue>No cite</font>');
+  if (title.substr(0, 2) == "::") {
+    var parts = title.split('::');
+    var my_bib = retrieve(parts[1]);
+    var cites = retrieve_all_bibs(parts[2]);
+    log('<font color=blue>' + cites.length + ' cites</font>');
   } else {
-    ncites = parseInt(grps[2]);
-    log('<font color=blue>' + ncites + ' cites</font>');
-
-    var starts = 0; 
-    var has_next_page = true;
-    while (has_next_page) {
-      cite_page = retrieve(grps[1]+'&start='+starts);
-      cites = cites.concat(extract_bibtex(cite_page));
-      starts += gc_config.items_per_page;
-      if (/<img src="\/intl\/en\/nav_next.gif" width="100"/.exec(cite_page)) {
-        has_next_page = true;
-      } else {
-        has_next_page = false;
-      }
+    var page = clean_page(retrieve('/scholar', mksearch(title)));
+    var pat = new RegExp('>' + title +'</a></h3>' + 
+                         '(?:.*?ss=fl><a href="([^"]+)"[^>]*>' + 
+                         'Cited by (\\d+)</a>)?(.*?Import into BibTeX)',
+                         'ig');
+    
+    matches = new Array();
+    while ((res = pat.exec(page)) != null) {
+      matches.push(res);
     }
-  }
-
-  my_bib = extract_bibtex(grps[3]);
-  if (my_bib.length == 0) {
-    log('<font color=red>No BibTeX Info</font><br />');
-    throw E_parse;
+  
+    if (matches.length == 0) {
+      log('<font color=red>Not Found</font><br />');
+      throw E_notfound;
+    } else if (matches.length > 1) {
+      log('<font color=red>Ambiguity</font><br />');
+      throw E_ambiguity;
+    }
+    var grps = matches[0];
+    var cites = new Array();
+    if (grps[2] == undefined) {
+      log('<font color=blue>No cite</font>');
+    } else {
+      ncites = parseInt(grps[2]);
+      log('<font color=blue>' + ncites + ' cites</font>');
+      cites = retrieve_all_bibs(grps[1]);
+    }
+  
+    my_bib = extract_bibtex(grps[3]);
+    if (my_bib.length == 0) {
+      log('<font color=red>No BibTeX Info</font><br />');
+      throw E_parse;
+    }
+    my_bib = my_bib[0];
   }
   log('<br />');
-  return my_bib[0]+'\n'+cites.join('\n');
+  return my_bib+'\n'+cites.join('\n');
+}
+
+function retrieve_all_bibs(url) {
+  var cites = new Array();
+  var starts = 0; 
+  var has_next_page = true;
+  while (has_next_page) {
+    cite_page = retrieve(url+'&start='+starts);
+    cites = cites.concat(extract_bibtex(cite_page));
+    starts += gc_config.items_per_page;
+    if (/<img src="\/intl\/en\/nav_next.gif" width="100"/.exec(cite_page)) {
+      has_next_page = true;
+    } else {
+      has_next_page = false;
+    }
+  }
+  return cites;
 }
 
 function run_getcites() {

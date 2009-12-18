@@ -65,17 +65,14 @@ def get_bibs(text):
     for i in range(len(bibs)):
         bib = bibs[i]
         bibkey = pat.search(bib).group(2)
-        # avoid duplicate bib keys
-        if bibitem_tex.has_key(bibkey):
-            global append_seed
-            newkey = '%s%d' % (bibkey, append_seed)
-            while bibitem_tex.has_key(newkey):
-                append_seed += 1
-                newkey = '%s%d' % (bibkey, append_seed)
-            bibkey = newkey
-            bibs[i] = pat.sub(r'@\1{%s,' % newkey, bib, 1)
-        bibitem_tex[bibkey] = True
-        bibs[i] = (bibkey, bibs[i])
+        # We use generated key here for two reasons:
+        #  1. to avoid duplication
+        #  2. bibtex seems unable to handle Chinese keys
+        global append_seed
+        newkey = 'bibkey%d' % append_seed
+        append_seed += 1
+        bibs[i] = pat.sub(r'@\1{%s,' % newkey, bib, 1)
+        bibs[i] = (newkey, bibs[i])
     return bibs
 
 def sh_in_tmp(cmd):
