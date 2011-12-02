@@ -124,7 +124,7 @@ function retrieve_cites(title) {
   } else {
     var page = clean_page(retrieve('/scholar', mksearch(title)));
     var pat = new RegExp('>' + title +'</a></h3>' + 
-                         '(?:.*?ss=fl><a href="([^"]+)"[^>]*>' + 
+                         '(?:.*?=gs_fl><a href="([^"]+)"[^>]*>' + 
                          'Cited by (\\d+)</a>)?(.*?Import into BibTeX)',
                          'ig');
     

@@ -33,7 +33,7 @@ publications = []
 citations = []
 tmptex_header = r"""\documentclass{article}
 \usepackage{xeCJK}
-\setCJKmainfont{Sun-ExtA}
+\setCJKmainfont{STXihei}
 \begin{document}
 """
 tmptex_footer = r"""
@@ -43,7 +43,8 @@ tmptex_footer = r"""
 """
 finaltex_header = r"""\documentclass{article}
 \usepackage{xeCJK}
-\setCJKmainfont{Sun-ExtA}
+\usepackage[utf8]{inputenc}
+\setCJKmainfont{STXihei}
 \usepackage[usenames]{color}
 \setlength{\parindent}{0in}
 \title{%s}
@@ -125,7 +126,9 @@ def format_ncite(nself_cite, nother_cite):
 ############################################################
 # Gether bibtex
 pat_bibfn = re.compile(r'\d+\..*\.bib')
-for fn in os.listdir(data_dir):
+fns = os.listdir(data_dir)
+fns.sort()
+for fn in fns:
     if pat_bibfn.match(fn) is None:
         continue
     publ_fn = os.path.join(data_dir, fn)
@@ -197,7 +200,7 @@ for i in range(len(publications)):
     else:
         tex_file.write('\\begin{enumerate}\n')
         for cite_key, cite_bib in self_cites[i]:
-            tex_file.write('\\item * %s\n' % bibitem_tex[cite_key])
+            tex_file.write('\\item * %s (self cite)\n' % bibitem_tex[cite_key])
         for cite_key, cite_bib in other_cites[i]:
             tex_file.write('\\item %s\n' % bibitem_tex[cite_key])
         tex_file.write('\\end{enumerate}\n')
